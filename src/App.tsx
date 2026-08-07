@@ -347,6 +347,7 @@ const App = () => {
             {fonts?.[pageIndex] && (
                 <div className="flex justify-center items-center gap-4 p-2">
                     <ArrowButton onClick={onGoBack} side="Left" />
+                    <p>{pageIndex + 1}</p>
                     <ArrowButton onClick={onGoForward} side="Right" />
                 </div>
             )}
