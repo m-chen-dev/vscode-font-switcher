@@ -206,11 +206,11 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
         const id = useId();
 
         return (
-            <div className="flex items-center rounded-md ring-2 ring-zinc-800 bg-zinc-900 focus-within:ring-zinc-400 focus-within:[&>button]:flex">
+            <div className="flex items-center rounded-md ring-2 ring-zinc-800 bg-zinc-900 focus-within:ring-zinc-400">
                 <input
                     placeholder="Enter Font Name"
                     className="flex-1 p-2 [&::-webkit-search-cancel-button]:appearance-none
-                rounded-md outline-none"
+                rounded-md outline-none not-placeholder-shown:[&~button]:flex"
                     value={search}
                     ref={ref}
                     onChange={onChange}
