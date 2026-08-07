@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useState } from "react";
-import { ArrowLeft, ArrowRight } from "react-feather";
+import { ArrowLeft, ArrowRight, ChevronRight } from "react-feather";
 
 type Font = {
     name: string;
@@ -85,15 +85,14 @@ type FontViewerProps = {
 const FontViewer = ({ fonts, onClick }: FontViewerProps) => {
     return (
         <div
-            className="flex-1 grid max-md:justify-center gap-2 
-      grid-cols-3 grid-rows-2 lg:grid-cols-5 lg:grid-rows-5 xl:grid-cols-9 
-      xl:grid-rows-6"
+            className="flex-1 grid gap-2 max-sm:justify-center
+      grid-cols-[repeat(auto-fit,200px)] auto-rows-[200px]"
         >
             {fonts.map((font, key) => {
                 return (
                     <button
                         onClick={onClick}
-                        className="flex flex-col rounded-md items-center 
+                        className="flex flex-col rounded-md items-center cursor-pointer
                       bg-zinc-900 p-2"
                         key={key}
                     >
@@ -204,12 +203,12 @@ type NavigatorProps = {
 const Navigator = ({activeFontName, onExit} : NavigatorProps) => {
   return (
     <div className="bg-zinc-800 flex p-0.5 items-center">
-      <div className="flex gap-1.5 px-1">
-        <button onClick={onExit} className="cursor-pointer hover:underline">Fonts</button>
+      <div className="flex items-center gap-0.5">
+        <button onClick={onExit} className={`${activeFontName && "hover:bg-zinc-700/70 cursor-pointer"} rounded-md p-1 px-1.5`}>Fonts</button>
         {activeFontName &&
         <>
-          <span className="cursor-default text-[oklch(47%_0_0)]">&gt;</span>
-          <span className="cursor-default text-[oklch(55%_0_0)]">{activeFontName}</span>
+          <span className="cursor-default text-[oklch(42%_0_0)]"><ChevronRight className="size-[23px]"/></span>
+          <span className="ml-0.5 cursor-default text-[oklch(60%_0_0)]">{activeFontName}</span>
         </>}
       </div>
     </div>
@@ -235,12 +234,34 @@ const App = () => {
 
     const onGoBack = () => {
         if (!fonts) return;
-        setPageIndex((prev) => (prev > 0 ? prev - 1 : fonts.length - 1));
+        setPageIndex((prev) => {
+            if (activeFontName) {
+                const font = fonts[prev].find(font => font.name === activeFontName);
+                if (!font) {
+                    return 0;
+                }
+
+                return (prev > 0 ? prev - 1 : font.styles.length - 1)
+            }
+
+            return (prev > 0 ? prev - 1 : fonts.length - 1);
+        });
     };
 
     const onGoForward = () => {
         if (!fonts) return;
-        setPageIndex((prev) => (prev < fonts.length - 1 ? prev + 1 : 0));
+        setPageIndex((prev) => {
+            if (activeFontName) {
+                const font = fonts[prev].find(font => font.name === activeFontName);
+                if (!font) {
+                    return 0;
+                }
+
+                return (prev < font.styles.length - 1 ? prev + 1 : 0)
+            }
+
+            return (prev < fonts.length - 1 ? prev + 1 : 0);
+        });
     };
 
     const onFontItemClick = (name: string) => {
