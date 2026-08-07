@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useState } from "react";
-import { ArrowLeft, ArrowRight, X } from "react-feather";
+import { ArrowLeft, ArrowRight } from "react-feather";
 
 type Font = {
     name: string;
@@ -107,30 +107,15 @@ const FontViewer = ({ fonts, onClick }: FontViewerProps) => {
 };
 
 type FontVariantViewerProps = {
-    onExit: React.MouseEventHandler<HTMLButtonElement>;
-    activeFontName: string;
     fonts: FontStyle[];
     onVariantClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 const FontVariantContainer = ({
-    onExit,
-    activeFontName,
     fonts,
     onVariantClick,
 }: FontVariantViewerProps) => {
     return (
         <div className="flex-1 flex flex-col gap-1">
-            <div className="flex p-1 gap-2 items-center rounded-md bg-zinc-900">
-                <button
-                    className="cursor-pointer flex items-center justify-center 
-          hover:bg-zinc-800 
-          rounded-full p-1"
-                    onClick={onExit}
-                >
-                    <X className="stroke-[oklch(60%_0_0)]" />
-                </button>
-                <h2 className="text-lg">{activeFontName} Font Variants</h2>
-            </div>
             <FontViewer fonts={fonts} onClick={onVariantClick} />
         </div>
     );
@@ -155,13 +140,11 @@ type MainFontInterfaceProps = {
     activeFontName: string | null;
     onFontItemClick: (name: string) => void;
     onVariantClick: React.MouseEventHandler<HTMLButtonElement>;
-    onExit: () => void;
 };
 const MainFontInterface = ({
     fonts,
     search,
     activeFontName,
-    onExit,
     onFontItemClick,
     onVariantClick,
 }: MainFontInterfaceProps) => {
@@ -179,8 +162,6 @@ const MainFontInterface = ({
                 activeFontName ? (
                     <FontVariantContainer
                         fonts={fonts}
-                        onExit={onExit}
-                        activeFontName={activeFontName}
                         onVariantClick={onVariantClick}
                     />
                 ) : (
@@ -215,6 +196,25 @@ const ArrowButton = ({ side, onClick }: ArrowButtonProps) => {
         </button>
     );
 };
+
+type NavigatorProps = {
+  activeFontName : string | null,
+  onExit : React.MouseEventHandler<HTMLButtonElement>
+}
+const Navigator = ({activeFontName, onExit} : NavigatorProps) => {
+  return (
+    <div className="bg-zinc-800 flex p-0.5 items-center">
+      <div className="flex gap-1.5 px-1">
+        <button onClick={onExit} className="cursor-pointer hover:underline">Fonts</button>
+        {activeFontName &&
+        <>
+          <span className="cursor-default text-[oklch(47%_0_0)]">&gt;</span>
+          <span className="cursor-default text-[oklch(55%_0_0)]">{activeFontName}</span>
+        </>}
+      </div>
+    </div>
+  )
+}
 
 const App = () => {
     const [fonts, setFonts] = useState<Font[][] | null>(null);
@@ -279,33 +279,33 @@ const App = () => {
 
     return (
         <div className="h-screen flex flex-col bg-zinc-950 text-white">
-            <div className="flex p-2 flex-col flex-1 gap-2">
-                <input
-                    placeholder="Enter Font Name"
-                    className="p-2
-                    [&::-webkit-search-cancel-button]:appearance-none
-                    rounded-md ring-2 ring-zinc-800 bg-zinc-900 outline-none focus:ring-zinc-400"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    type="search"
-                    name={id}
-                    id={id}
-                />
-                <MainFontInterface
-                    onExit={onExit}
-                    search={search}
-                    activeFontName={activeFontName}
-                    onFontItemClick={onFontItemClick}
-                    onVariantClick={onVariantClick}
-                    fonts={getFonts()}
-                />
-            </div>
-            {fonts?.[pageIndex] && (
-                <div className="flex justify-center items-center gap-4 p-2">
-                    <ArrowButton onClick={onGoBack} side="Left" />
-                    <ArrowButton onClick={onGoForward} side="Right" />
-                </div>
-            )}
+          <Navigator activeFontName={activeFontName} onExit={onExit}/>
+          <div className="flex p-2 flex-col flex-1 gap-2">
+              <input
+                  placeholder="Enter Font Name"
+                  className="p-2
+                  [&::-webkit-search-cancel-button]:appearance-none
+                  rounded-md ring-2 ring-zinc-800 bg-zinc-900 outline-none focus:ring-zinc-400"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  type="search"
+                  name={id}
+                  id={id}
+              />
+              <MainFontInterface
+                  search={search}
+                  activeFontName={activeFontName}
+                  onFontItemClick={onFontItemClick}
+                  onVariantClick={onVariantClick}
+                  fonts={getFonts()}
+              />
+          </div>
+          {fonts?.[pageIndex] && (
+              <div className="flex justify-center items-center gap-4 p-2">
+                  <ArrowButton onClick={onGoBack} side="Left" />
+                  <ArrowButton onClick={onGoForward} side="Right" />
+              </div>
+          )}
         </div>
     );
 };
