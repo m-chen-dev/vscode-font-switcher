@@ -1,217 +1,27 @@
-import React, { useId, useState, useRef, forwardRef } from "react";
-import { ChevronRight, X } from "react-feather";
+import React, { useId, useState, useRef, forwardRef, useEffect } from "react";
+import { X } from "react-feather";
+import type { FontList } from "./electron";
 
-type Font = {
-    name: string;
-    thumbnail?: string;
-    styles: FontStyle[];
-};
-
-type FontStyle = {
-    name: string;
-    thumbnail?: string;
-    weight?: number;
-    width?: number;
-    italics?: boolean;
-};
-
-
-function loadFontStyles(name: string): FontStyle[] {
-    name = name.toLowerCase();
-    switch (name) {
-        case "consolas":
-            return [
-                {
-                    name: "Consolas Light",
-                    weight: 300,
-                    italics: false,
-                },
-                {
-                    name: "Consolas Regular",
-                    weight: 400,
-                    italics: false,
-                },
-            ];
-        case "jetbrains mono":
-            return [
-                {
-                    name: "Jetbrains Mono Regular",
-                    weight: 400,
-                    italics: false,
-                },
-            ];
-        default:
-            return [];
+async function loadFonts(): Promise<FontList> {
+    try {
+        const fonts = await window.electronAPI.loadFonts();
+        return fonts;
+    } catch (error) {
+        console.error(error);
+        return [];
     }
 }
 
-function loadFonts(): Font[] {
-    return [
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "Consolas",
-            styles: loadFontStyles("consolas"),
-        },
-        {
-            name: "JetBrains Mono",
-            styles: loadFontStyles("jetbrains mono"),
-        },
-    ];
-}
-
 type FontViewerProps = {
-    fonts: Font[] | FontStyle[];
+    fonts: FontList;
     onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 const FontViewer = ({ fonts, onClick }: FontViewerProps) => {
     return (
         <div
             className="flex-1 overflow-y-auto grid gap-2
-            grid-cols-[repeat(auto-fit,25%)]
-      md:grid-cols-[repeat(auto-fit,20%)] auto-rows-[200px]"
+            grid-cols-[repeat(auto-fit,minmax(200px,1fr))]
+       auto-rows-[200px]"
         >
             {fonts.map((font, key) => {
                 return (
@@ -221,7 +31,6 @@ const FontViewer = ({ fonts, onClick }: FontViewerProps) => {
                       bg-zinc-900 p-2"
                         key={key}
                     >
-                        <img src={font.thumbnail} alt="" />
                         <h3 className="text-zinc-200">{font.name}</h3>
                     </button>
                 );
@@ -231,18 +40,14 @@ const FontViewer = ({ fonts, onClick }: FontViewerProps) => {
 };
 
 type MainFontInterfaceProps = {
-    fonts: Font[] | FontStyle[];
+    fonts: FontList | null;
     search: string;
-    activeFontName: string | null;
     onFontItemClick: (name: string) => void;
-    onVariantClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 const MainFontInterface = ({
     fonts,
     search,
-    activeFontName,
     onFontItemClick,
-    onVariantClick,
 }: MainFontInterfaceProps) => {
     const cleanSearch = search.trim().toLowerCase();
     fonts =
@@ -255,49 +60,11 @@ const MainFontInterface = ({
     return (
         <>
             {fonts && fonts.length > 0 ? (
-                activeFontName ? (
-                    <FontViewer fonts={fonts} onClick={onVariantClick} />
-                ) : (
-                    <FontViewer
-                        fonts={fonts}
-                        onClick={(e) =>
-                            onFontItemClick(e.currentTarget.textContent)
-                        }
-                    />
-                )
+                <FontViewer fonts={fonts} onClick={(e) => onFontItemClick(e.currentTarget.textContent)} />
             ) : (
                 <p className="p-2 text-2xl">No fonts to display</p>
             )}
         </>
-    );
-};
-
-type NavigatorProps = {
-    activeFontName: string | null;
-    onExit: React.MouseEventHandler<HTMLButtonElement>;
-};
-const Navigator = ({ activeFontName, onExit }: NavigatorProps) => {
-    return (
-        <div className="bg-[oklch(25%_0_0)] flex p-0.5 items-center sticky top-0">
-            <div className="flex items-center gap-0.5">
-                <button
-                    onClick={onExit}
-                    className={`${activeFontName && "hover:bg-zinc-700/70 cursor-pointer"} rounded-md p-1 px-1.5`}
-                >
-                    Fonts
-                </button>
-                {activeFontName && (
-                    <>
-                        <span className="cursor-default text-[oklch(42%_0_0)]">
-                            <ChevronRight className="size-[23px]" />
-                        </span>
-                        <span className="ml-0.5 cursor-default text-[oklch(60%_0_0)]">
-                            {activeFontName}
-                        </span>
-                    </>
-                )}
-            </div>
-        </div>
     );
 };
 
@@ -312,8 +79,7 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
 
         return (
             <div className="flex 
-            sticky top-10
-            items-center rounded-md ring-2 ring-zinc-800 bg-zinc-900 focus-within:ring-zinc-400">
+            items-center rounded-md ring-1 ring-zinc-800 bg-zinc-900 focus-within:ring-[oklch(70%_0_0)]">
                 <input
                     placeholder="Enter Font Name"
                     className="flex-1 p-2 [&::-webkit-search-cancel-button]:appearance-none
@@ -338,32 +104,24 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
     },
 );
 
-const loadedFonts = loadFonts();
-
 const App = () => {
-    const [fonts, setFonts] = useState<Font[] | FontStyle[]>(loadedFonts);
+    const [fonts, setFonts] = useState<FontList | null>(null);
     const [search, setSearch] = useState("");
-    const [activeFontName, setActiveFontName] = useState<string | null>(null);
     const searchRef = useRef<HTMLInputElement | null>(null);
+    const loadedFontsRef = useRef<FontList | null>(null);
+
+    useEffect(() => {
+        async function load() {
+            const loadedFonts = await loadFonts();
+            loadedFontsRef.current = loadedFonts;
+            setFonts(loadedFonts);
+        }
+        
+        load();
+    }, []);
 
     const onFontItemClick = (name: string) => {
         console.log(name);
-        setActiveFontName(name);
-        setFonts(prev => {
-            const data = (prev as Font[]).find(f => f.name === name)!;
-            return data.styles;
-        })
-        setSearch("");
-    };
-
-    const onExit = () => {
-        setActiveFontName(null);
-        setSearch("");
-        setFonts(loadedFonts);
-    };
-
-    const onVariantClick = () => {
-        console.log("variant clicked");
     };
 
     const onClear = () => {
@@ -376,20 +134,19 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-zinc-950 text-white">
-            <Navigator activeFontName={activeFontName} onExit={onExit} />
-            <div className="flex p-2 flex-col flex-1 gap-2">
+        <div className="min-h-screen flex flex-col px-2 bg-zinc-950 text-white">
+            <div className="sticky top-1 mb-1">
                 <Search
                     search={search}
                     onChange={(e) => setSearch(e.target.value)}
                     onClear={onClear}
                     ref={searchRef}
                 />
+            </div>
+            <div className="flex py-2 flex-col flex-1 gap-2">
                 <MainFontInterface
                     search={search}
-                    activeFontName={activeFontName}
                     onFontItemClick={onFontItemClick}
-                    onVariantClick={onVariantClick}
                     fonts={fonts}
                 />
             </div>
