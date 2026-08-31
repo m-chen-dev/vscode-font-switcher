@@ -27,7 +27,7 @@ const FontViewer = ({ fonts, onClick }: FontViewerProps) => {
                 return (
                     <button
                         onClick={onClick}
-                        className="flex flex-col rounded-md items-center cursor-pointer
+                        className="flex flex-col hover:bg-zinc-800/65 rounded-md items-center cursor-pointer
                       bg-zinc-900 p-2"
                         key={key}
                     >
@@ -134,8 +134,8 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col px-2 bg-zinc-950 text-white">
-            <div className="sticky top-1 mb-1">
+        <div className="min-h-screen flex flex-col px-2 gap-1 bg-zinc-950 text-white">
+            <div className="sticky top-1">
                 <Search
                     search={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -143,7 +143,7 @@ const App = () => {
                     ref={searchRef}
                 />
             </div>
-            <div className="flex py-2 flex-col flex-1 gap-2">
+            <div className="flex flex-col py-2 flex-1 gap-2">
                 <MainFontInterface
                     search={search}
                     onFontItemClick={onFontItemClick}
