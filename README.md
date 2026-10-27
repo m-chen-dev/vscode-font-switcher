@@ -7,8 +7,7 @@ Right now I have it built with Electron so that it can load fonts from the OS, b
 # Building & Running
 
 1. Clone the repository
-   ```
-   bash
+   ```bash
    git clone https://github.com/m-chen-dev/vscode-font-switcher
    cd vscode-font-switcher
    ```
