@@ -4,6 +4,8 @@ I built this font switcher to improve upon the string based font selection that 
 It loads the list of installed fonts on your OS and displays them through a grid, where you can filter through the fonts with a search bar.
 Right now I have it built with Electron so that it can load fonts from the OS, but I am currently working on porting the current codebase to a VSCode extension codebase.
 
+It uses React to organize the UI into components, and Tailwind CSS to style them.
+
 # Building & Running
 
 1. Clone the repository
