@@ -24,5 +24,5 @@ It uses React to organize the UI into components, and Tailwind CSS to style them
 
 ## Preview
 <p align="center">
-  <img width="600" height="560" alt="Electron font list preview" src="https://github.com/user-attachments/assets/11d571a0-9ddb-4ce8-a426-5f9076cea1cf" />
+  <img width="726" height="560" alt="Electron font list preview" src="https://github.com/user-attachments/assets/11d571a0-9ddb-4ce8-a426-5f9076cea1cf" />
 </p>
