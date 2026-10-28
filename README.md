@@ -6,12 +6,21 @@ Right now I have it built with Electron so that it can load fonts from the OS, b
 
 It uses React to organize the UI into components, and Tailwind CSS to style them.
 
-# Building & Running
+## Building & Running
 
-1. Clone the repository
+1. **Clone the repository**
    ```bash
    git clone https://github.com/m-chen-dev/vscode-font-switcher
    cd vscode-font-switcher
    ```
-3. Run `npm install` to install React, Electron, Tailwind CSS + other dependencies
-4. Execute this command: `npm run electron:dev` to launch the React dev server and open the Electron preview
+3. **Install React, Electron, Tailwind CSS + other dependencies**
+   ```bash 
+   npm install
+   ``` 
+4. **Launch the React dev server and open the Electron preview**
+   ```bash
+   npm run electron:dev
+   ```
+
+## Preview
+![Electron font list preview](./screenshots/Preview.png)
